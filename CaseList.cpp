@@ -1,4 +1,4 @@
-#include "CaseList.h"
+﻿#include "CaseList.h"
 
 
 
@@ -18,9 +18,25 @@ void CaseList::AddCase(const Case& case_)
 	_caseList.push_back(tmp);
 }
 
+void CaseList::DeleteCase(int numCase)
+{
+	_caseList.erase(_caseList.begin() + numCase);
+}
+
 CaseList::~CaseList()
 {
+	
 	Clear();
+}
+
+size_t CaseList::Size()
+{
+	return this->_caseList.size();
+}
+
+Case& CaseList::GetCase(size_t index)
+{
+	return *(this->_caseList.at(index));
 }
 
 void CaseList::Clear()
@@ -29,7 +45,7 @@ void CaseList::Clear()
 		delete el;
 }
 
-const std::vector<Case*>& CaseList::GetCaseList()
+std::vector<Case*> CaseList::GetCaseList() const
 {
 	return _caseList;
 }

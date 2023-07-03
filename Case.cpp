@@ -1,4 +1,4 @@
-#include "Case.h"
+﻿#include "Case.h"
 
 
 Case::Case() 
@@ -6,6 +6,10 @@ Case::Case()
 
 Case::Case(std::string title, std::string date) 
 	: _title(title), _date(Date(date)) {}
+
+Case::Case(std::string title, Date date) : _title(title), _date(Date(date)){}
+
+Case::Case(char* title, char* date) : _title(title), _date(Date(date)) {}
 
 std::string Case::GetTitle()
 {
@@ -17,8 +21,3 @@ Date Case::GetDate()
 	return _date;
 }
 
-void Case::PrintCase()
-{
-	std::cout << _title << " ";
-	_date.PrintDate();
-}

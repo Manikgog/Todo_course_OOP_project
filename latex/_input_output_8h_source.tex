@@ -1,0 +1,38 @@
+\doxysection{Input\+Output.\+h}
+\hypertarget{_input_output_8h_source}{}\label{_input_output_8h_source}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ \_INPUT\_OUTPUT\_H\_}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ \_INPUT\_OUTPUT\_H\_}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}CaseList.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}conio.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_input_output}{InputOutput}}}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \_sizeTitle\ =\ 56;}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{bool}\ CheckOverdueCase(\textcolor{keywordtype}{int}\ day,\ \textcolor{keywordtype}{int}\ month,\ \textcolor{keywordtype}{int}\ year,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ currentYear,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ currentMonth,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ currentDay)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{bool}\ IsValidDate(\textcolor{keywordtype}{int}\ day,\ \textcolor{keywordtype}{int}\ month,\ \textcolor{keywordtype}{int}\ year);}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{bool}\ isLeapYear(\textcolor{keywordtype}{int}\ year);}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{char}\ input\_menu(\textcolor{keywordtype}{int}\ low,\ \textcolor{keywordtype}{int}\ hi,\ \textcolor{keywordtype}{int}\&\ numAcion);}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ PrintCaseList(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_case_list}{CaseList}}\&\ list)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{void}\ PrintOneCase(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_case_list}{CaseList}}\&\ list,\ \textcolor{keywordtype}{int}\ nCase)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{void}\ PrintOverdueCaseList(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_case_list}{CaseList}}\&\ list)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw\_menu(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ numAction);}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ AddingCase(\mbox{\hyperlink{class_case_list}{CaseList}}\&\ list);}
+\DoxyCodeLine{00025\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{class_input_output}{InputOutput}}(std::string\ filename,\ \mbox{\hyperlink{class_case_list}{CaseList}}\&\ list);}
+\DoxyCodeLine{00027\ \ \ \ \ std::vector<int>\ CheckDate(std::string\ date);}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{int}\ ReadFromFile(std::string\ filename,\ \mbox{\hyperlink{class_case_list}{CaseList}}\&\ list);}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ WriteToFile(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_case_list}{CaseList}}\&\ list,\ std::string\ filename);}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ MainMenu(\mbox{\hyperlink{class_case_list}{CaseList}}\&\ list);}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{int}\ ChooseCaseMenu(\mbox{\hyperlink{class_case_list}{CaseList}}\&\ list,\ \textcolor{keywordtype}{int}\ nCase);}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{int}\ ChangeCaseMenu(\textcolor{keywordtype}{int}\ nAction,\ \textcolor{keywordtype}{int}\ nCase,\ \mbox{\hyperlink{class_case_list}{CaseList}}\&\ list);}
+\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
