@@ -12,6 +12,13 @@ size_t CaseList::MaxLength()
 	return maxLength;
 }
 
+bool CaseList::CheckIndex(int index)
+{
+	if (index < 0 || index >= Size())
+		return false;
+	return true;
+}
+
 CaseList::CaseList(const CaseList& cList)
 {
 	for (const auto& el : cList._caseList)
@@ -27,10 +34,13 @@ void CaseList::AddCase(const Case& case_)
 	_caseList.push_back(tmp);
 }
 
-void CaseList::DeleteCase(int numCase)
+bool CaseList::DeleteCase(int index)
 {
-	delete _caseList.at(numCase);
-	_caseList.erase(_caseList.begin() + numCase);
+	if (CheckIndex(index))						// можно поставить вызов исключения 
+		return false;
+	delete _caseList.at(index);					// освобождение памяти выделенной под экземпляр класса Case
+	_caseList.erase(_caseList.begin() + index);	// удаление элемента вектора c индексом index
+	return true;
 }
 
 CaseList::~CaseList()
@@ -95,6 +105,8 @@ void CaseList::PrintList()
 
 void CaseList::PrintCaseByIndex(size_t index)
 {
+	if (!CheckIndex(index))											// можно поставить вызов исключения
+		return;
 	size_t maxLength = MaxLength();
 	size_t elLength = 0;
 	std::cout << _caseList.at(index)->GetTitle();
@@ -105,5 +117,6 @@ void CaseList::PrintCaseByIndex(size_t index)
 	std::cout << _caseList.at(index)->GetDate().GetDay() << '.' 
 				<< _caseList.at(index)->GetDate().GetMonth() << '.' 
 				<< _caseList.at(index)->GetDate().GetYear();
+	return;
 }
 

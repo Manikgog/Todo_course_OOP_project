@@ -457,7 +457,7 @@ void InputOutput::MainMenu(CaseList& list)
 
 				// exit to the main menu when selecting "Назад"
 				// выход в главное меню при выборе пункта "Назад"
-				if (nCase == list.GetCaseList().size()) {
+				if (nCase < 0 || nCase >= list.GetCaseList().size()) {
 					numAction = 1;
 					break;
 				}
@@ -585,7 +585,6 @@ int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 	} while (input_menu(1, 4, num) != '\r');
 	std::string answer;
 	std::string date;
-	//char* title = new char[this->_sizeTitle] {};
 	std::vector<int> vec_date;
 	switch (num) {
 	case 1:
@@ -614,8 +613,10 @@ int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 			std::cin >> answer;
 			if (answer[0] == 'y' || answer[0] == 'д')
 			{
-				list.DeleteCase(numCase);
-				std::cout << "Дело удалено из списка.\n";
+				if(list.DeleteCase(numCase))
+					std::cout << "Дело удалено из списка.\n";
+				else
+					std::cout << "Дело НЕ удалено из списка.\n";
 			}
 		}
 		break;
@@ -625,17 +626,19 @@ int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 	if (num == 1)
 	{
 		Case newCase(answer, list.GetCaseList().at(numCase)->GetDate());
-		list.DeleteCase(numCase);
-		list.AddCase(newCase);
+		if (list.DeleteCase(numCase))
+			list.AddCase(newCase);
+		else
+			std::cout << "Ошибка удаления!\n";
 	}
 	else if (num == 2)
 	{
 		Case newCase(list.GetCaseList().at(numCase)->GetTitle(), date);
-		list.DeleteCase(numCase);
-		list.AddCase(newCase);
+		if (list.DeleteCase(numCase))
+			list.AddCase(newCase);
+		else
+			std::cout << "Ошибка удаления!\n";
 	}
-	
-	//delete[] title;
 	return 0;
 }
 

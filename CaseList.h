@@ -18,12 +18,13 @@ class CaseList
 private:
 	std::vector<Case*> _caseList;			// вектор с указателями на экземпляры класса Case
 	size_t MaxLength();						// метод возвращающий длину самого длинного дела по количеству символов
+	bool CheckIndex(int index);				// метод для проверка валидности индекса для контроля выхода за границы вектора
 public:
 	CaseList() {}						
 	CaseList(const CaseList& cList);
 	~CaseList();
 	void AddCase(const Case& case_);		// метод добавления задачи в список
-	void DeleteCase(int numCase);			// метод для удаления задачи из списка
+	bool DeleteCase(int index);				// метод для удаления задачи из списка
 	void Clear();							// метод для очистки списка задач
 	size_t Size() const;							// метод возвращающий размер списка
 	Case& GetCase(size_t index);			// метод возвращаюищй ссылку на задачу (объект Case) по индексу 
