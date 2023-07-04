@@ -177,33 +177,10 @@ char InputOutput::input_menu(int low, int hi, int& numAcion) {
 	return (char)c1;
 }
 
-// метод для вывода на печать всего списка задач
-void InputOutput::PrintCaseList(const CaseList& list) const
-{
-	for (const auto& it : list.GetCaseList())
-	{
-		std::cout << it->GetTitle() << " " << it->GetDate().GetDay() << "." << it->GetDate().GetMonth() << "." << it->GetDate().GetYear() << std::endl;
-	}
-}
 
-// метод для вывода на печать всего списка задач
-void InputOutput::PrintOneCase(const CaseList& list, int nCase) const
-{
-	for (size_t i = 0; i < list.GetCaseList().size(); i++)
-	{
-		if (i == nCase)
-		{
-			std::cout << list.GetCaseList().at(i)->GetTitle() << " "
-				<< list.GetCaseList().at(i)->GetDate().GetDay() << "."
-				<< list.GetCaseList().at(i)->GetDate().GetMonth() << "."
-				<< list.GetCaseList().at(i)->GetDate().GetYear() << std::endl;
-			break;
-		}
-	}
-}
 
 // метод для вывода на печать списка просроченных дел
-void InputOutput::PrintOverdueCaseList(const CaseList& list) const
+void InputOutput::PrintOverdueCaseList(CaseList& list) const
 {
 	if (!list.GetCaseList().size())	// при пустом списке выходим из функции
 		return;
@@ -213,14 +190,14 @@ void InputOutput::PrintOverdueCaseList(const CaseList& list) const
 	unsigned short currentMonth = 1 + ltm->tm_mon;
 	unsigned short currentDay = ltm->tm_mday;
 	bool is_first = true;
-	for (const auto& it : list.GetCaseList())
+	for (size_t i = 0; i < list.Size(); i++)
 	{
-		if (!CheckOverdueCase(it->GetDate().GetDay(), it->GetDate().GetMonth(), it->GetDate().GetYear(), currentYear, currentMonth, currentDay))
+		if (list.GetCaseList().at(i)->GetDate() < Date(currentDay, currentMonth, currentYear))
 		{
 			if (is_first)
 				std::cout << "\x1b[33mСписок просроченных задач : \x1b[0m\n";
 			is_first = false;
-			std::cout << it->GetTitle() << " " << it->GetDate().GetDay() << "." << it->GetDate().GetMonth() << "." << it->GetDate().GetYear();
+			list.PrintCaseByIndex(i);
 		}
 	}
 }
@@ -304,8 +281,7 @@ void InputOutput::AddingCase(CaseList& list)
 	std::vector<int> vec_date;
 	
 	
-		size_t month_index;
-		size_t year_index;
+	
 		do {
 			std::cout << "\x1b[33mВведите дату в формате ДД.ММ.ГГГГ -> \x1b[0m";
 			std::getline(std::cin, date);
@@ -417,7 +393,7 @@ void InputOutput::WriteToFile(const CaseList& list, std::string filename)
 	
 	for (int j = 0; j < list.GetCaseList().size(); ++j)
 	{
-		static C4se c4se;
+		C4se c4se;
 		int lengthOfTitleString = list.GetCaseList().at(j)->GetTitle().size();
 		for (int i = 0; i < lengthOfTitleString; ++i)
 		{
@@ -471,24 +447,24 @@ void InputOutput::MainMenu(CaseList& list)
 				do {
 					// выбор дела из списка
 					system("cls");
-					if (1 == ChooseCaseMenu(list, nCase)) {
+					if (1 == ChooseCaseMenu(list, nCase)) { // если список пуст
 						numAction = 1;
 						break;
 					}
-				} while ('\r' != input_menu(1, list.GetCaseList().size() + 1, nCase));
+				} while ('\r' != input_menu(0, list.Size(), nCase));
 
 				system("cls");
 
-				// exit to the main menu when selecting "Ќазад"
-				// выход в главное меню при выборе пункта "Ќазад"
-				if (nCase == list.GetCaseList().size() + 1) {
+				// exit to the main menu when selecting "Назад"
+				// выход в главное меню при выборе пункта "Назад"
+				if (nCase == list.GetCaseList().size()) {
 					numAction = 1;
 					break;
 				}
 				// choosing an action with a selected case
 				// выбор действи¤ с выбранным делом
 				
-				ChangeCaseMenu(nAction, nCase - 1, list);
+				ChangeCaseMenu(nAction, nCase, list);
 				
 			} while (nAction == 1);
 			
@@ -501,7 +477,7 @@ void InputOutput::MainMenu(CaseList& list)
 			
 			std::cout << "Вы уверены, что хотите удалить все задачи (д/н)? ";
 			std::cin >> answer;
-			if (answer == 'д')
+			if (answer == 'д' || answer == 'y')
 			{
 				list.Clear();
 				if (!list.GetCaseList().size())
@@ -518,7 +494,8 @@ void InputOutput::MainMenu(CaseList& list)
 				numAction = 1;
 				break;
 			}
-			PrintCaseList(list);
+			SortByDate(list);
+			list.PrintList();
 			system("pause");
 			system("cls");
 			break;
@@ -532,28 +509,30 @@ void InputOutput::MainMenu(CaseList& list)
 // метод для вывода на экран меню выбора дела из списка
 int InputOutput::ChooseCaseMenu(CaseList& list, int nCase)
 {
-	if (list.GetCaseList().size() == 0) {
+	size_t listSize = list.Size();
+	if (listSize == 0) {
 		std::cout << "Запланированных дел нет. Список пуст.\n";
 		return 1;
 	}
 	else {
-		--nCase;
-		size_t listSize = list.GetCaseList().size();
+		
+		
 		std::cout << "\x1b[33mСписок запланированных дел:\x1b[0m\n";
-		if (nCase < listSize) {
+		if (nCase >= 0 && nCase < listSize) {
 			for (int i = 0; i < listSize; ++i) {
 				if (nCase == i)
-					std::cout << "\x1b[36m" << list.GetCaseList().at(i)->GetTitle() << " "
-					<< list.GetCaseList().at(i)->GetDate().GetDay() << "."
-					<< list.GetCaseList().at(i)->GetDate().GetMonth() << "."
-					<< list.GetCaseList().at(i)->GetDate().GetYear() << "\x1b[0m" << std::endl;
+				{
+					std::cout << "\x1b[36m";
+					list.PrintCaseByIndex(i);
+					std::cout << "\x1b[0m";
+				}
 				else
-					PrintOneCase(list, i);
+					list.PrintCaseByIndex(i); std::cout << std::endl;
 			}
 			std::cout << "Назад\n";
 		}
 		else {
-			PrintCaseList(list);
+			list.PrintList();
 			std::cout << "\x1b[36mНазад\x1b[0m\n";
 		}
 	}
@@ -563,6 +542,7 @@ int InputOutput::ChooseCaseMenu(CaseList& list, int nCase)
 // метод для вывода на экран меню выбора действий с выбранным делом и выполняющий эти действия
 int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 {
+	if (numCase < 0) numCase = 0;
 	int num = 1;
 	do {
 
@@ -570,7 +550,7 @@ int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 		{
 		case 1:
 			system("cls");
-			PrintOneCase(list, numCase);
+			list.PrintCaseByIndex(numCase);
 			std::cout << "\n\x1b[36mИзменить название\x1b[0m\n";
 			std::cout << "Изменить дату\n";
 			std::cout << "Удалить дело\n";
@@ -578,7 +558,7 @@ int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 			break;
 		case 2:
 			system("cls");
-			PrintOneCase(list, numCase);
+			list.PrintCaseByIndex(numCase);
 			std::cout << "\nИзменить название\n";
 			std::cout << "\x1b[36mИзменить дату\x1b[0m\n";
 			std::cout << "Удалить дело\n";
@@ -586,7 +566,7 @@ int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 			break;
 		case 3:
 			system("cls");
-			PrintOneCase(list, numCase);
+			list.PrintCaseByIndex(numCase);
 			std::cout << "\nИзменить название\n";
 			std::cout << "Изменить дату\n";
 			std::cout << "\x1b[36mУдалить дело\x1b[0m\n";
@@ -594,7 +574,7 @@ int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 			break;
 		case 4:
 			system("cls");
-			PrintOneCase(list, numCase);
+			list.PrintCaseByIndex(numCase);
 			std::cout << "\nИзменить название\n";
 			std::cout << "Изменить дату\n";
 			std::cout << "Удалить дело\n";
@@ -605,21 +585,13 @@ int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 	} while (input_menu(1, 4, num) != '\r');
 	std::string answer;
 	std::string date;
-	char* title = new char[this->_sizeTitle] {};
+	//char* title = new char[this->_sizeTitle] {};
 	std::vector<int> vec_date;
 	switch (num) {
 	case 1:
 		std::cout << "\x1b[33mВведите новое название дела: \x1b[0m";
 		answer = "";
 		std::getline(std::cin, answer);
-		for (int i = 0; i < answer.size(); i++) {
-			if (i == this->_sizeTitle - 1)
-			{
-				title[i] = '\0';
-				break;
-			}
-			title[i] = answer[i];
-		}
 		break;
 	case 2:
 		do {
@@ -652,7 +624,7 @@ int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 	}
 	if (num == 1)
 	{
-		Case newCase(title, list.GetCaseList().at(numCase)->GetDate());
+		Case newCase(answer, list.GetCaseList().at(numCase)->GetDate());
 		list.DeleteCase(numCase);
 		list.AddCase(newCase);
 	}
@@ -663,7 +635,11 @@ int InputOutput::ChangeCaseMenu(int nAction, int numCase, CaseList& list)
 		list.AddCase(newCase);
 	}
 	
-	delete[] title;
+	//delete[] title;
 	return 0;
 }
 
+void InputOutput::SortByDate(CaseList& list)
+{
+	list.SortListByDate();
+}

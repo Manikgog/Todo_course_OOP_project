@@ -17,9 +17,7 @@ private:
 	bool IsValidDate(int day, int month, int year);
 	bool isLeapYear(int year);
 	char input_menu(int low, int hi, int& numAcion);
-	void PrintCaseList(const CaseList& list) const;
-	void PrintOneCase(const CaseList& list, int nCase) const;
-	void PrintOverdueCaseList(const CaseList& list) const;
+	void PrintOverdueCaseList(CaseList& list) const;
 	void Draw_menu(const int numAction);
 	void AddingCase(CaseList& list);
 public:
@@ -28,8 +26,9 @@ public:
 	int ReadFromFile(std::string filename, CaseList& list);
 	void WriteToFile(const CaseList& list, std::string filename);
 	void MainMenu(CaseList& list);
-	int ChooseCaseMenu(CaseList& list, int nCase);
-	int ChangeCaseMenu(int nAction, int nCase, CaseList& list);
+	int ChooseCaseMenu(CaseList& list, int nCase);						// меню выбора дела из списка
+	int ChangeCaseMenu(int nAction, int nCase, CaseList& list);			// меню выбора действия с выбранным делом
+	void SortByDate(CaseList& list);
 };
 
 #endif

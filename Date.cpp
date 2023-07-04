@@ -48,3 +48,36 @@ int Date::GetYear()
 {
 	return _year;
 }
+
+bool Date::operator<(const Date& date)
+{
+	if (_year < date._year) {
+		//std::cout << "\x1b[31mПланируемый год уже прошёл.\x1b[0m" << std::endl;
+		return true;
+	}
+	else if (_month < date._month && _year == date._year) {
+		//std::cout << "\x1b[31mПланируемый месяц уже прошёл.\x1b[0m" << std::endl;
+		return true;
+	}
+	else if (_day < date._day && _month == date._month) {
+		//std::cout << "\x1b[31mПланируемый день уже прошёл.\x1b[0m" << std::endl;
+		return true;
+	}
+	return false;
+}
+
+bool Date::operator==(const Date& date)
+{
+	if (_year == date._year && _month == date._month && _day == date._day) 
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Date::operator>(const Date& date)
+{
+	if ((*this < date) || (*this == date))
+		return false;
+	return true;
+}

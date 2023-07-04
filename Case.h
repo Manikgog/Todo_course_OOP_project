@@ -19,7 +19,6 @@ public:
 	Case();
 	Case(std::string title, std::string date);
 	Case(std::string title, Date date);
-	Case(char* title, char* date);
 	std::string GetTitle();
 	Date GetDate();
 	

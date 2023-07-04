@@ -26,6 +26,9 @@ public:
 	int GetDay();
 	int GetMonth();
 	int GetYear();
+	bool operator<(const Date& date);
+	bool operator==(const Date& date);
+	bool operator>(const Date& date);
 };
 
 #endif
